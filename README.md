@@ -18,3 +18,7 @@ MOCK_TEST_SUITE=regression python3 run_mock_tests.py
 
 - `tests/smoke` — 10 мок-тестов и 10 отдельных Allure-result JSON-файлов;
 - `tests/regression` — 5 мок-тестов и 5 отдельных Allure-result JSON-файлов.
+
+## Jenkins и TestOps
+
+`Jenkinsfile` запускает выбранный набор через `allurectl watch` и загружает результаты в TestOps. На Jenkins-агенте должен быть установлен `allurectl`, а в Jenkins необходимо создать Secret text credential с идентификатором `allure-token` и значением токена TestOps. Используются те же endpoint и project id, что и в примере: `https://nimaruichi.qameta.in` и проект `1`.
