@@ -50,7 +50,10 @@ jobs:
           allure-project-id: ${{ env.ALLURE_PROJECT_ID }}
 
       - name: Run tests with Allure
-        run: allurectl watch -- python -m pytest tests/${{ inputs.MOCK_TEST_SUITE }} --alluredir=${{ env.ALLURE_RESULTS }} --clean-alluredir
+        run: |
+          TESTS_PATH=tests/${{ inputs.MOCK_TEST_SUITE }}
+          if [ "${{ inputs.MOCK_TEST_SUITE }}" = "tests" ]; then TESTS_PATH=tests; fi
+          allurectl watch -- python -m pytest "$TESTS_PATH" --alluredir=${{ env.ALLURE_RESULTS }} --clean-alluredir
 
       - name: Save test results
         if: always()
