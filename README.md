@@ -15,5 +15,5 @@ MOCK_TEST_SUITE=regression python3 run_mock_tests.py
 
 Наборы расположены отдельно:
 
-- `tests/smoke` — создаёт `smoke-login-result.json` и `smoke-login-log.txt`;
-- `tests/regression` — создаёт `regression-payment-result.json` и `regression-payment-log.txt`.
+- `tests/smoke` — 10 мок-тестов и 10 отдельных Allure-result JSON-файлов;
+- `tests/regression` — 5 мок-тестов и 5 отдельных Allure-result JSON-файлов.

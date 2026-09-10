@@ -1,4 +1,4 @@
-"""Produces a small Allure result for the smoke mock suite."""
+"""Produces ten Allure results for the smoke mock suite."""
 
 import json
 import os
@@ -9,23 +9,23 @@ from pathlib import Path
 
 results_dir = Path(os.getenv("ALLURE_RESULTS_DIR", "allure-results"))
 results_dir.mkdir(parents=True, exist_ok=True)
-test_uuid = str(uuid.uuid4())
 started = int(time.time() * 1000)
 
-attachment = "smoke-login-log.txt"
-(results_dir / attachment).write_text("Mock smoke check: login endpoint is available.\n", encoding="utf-8")
+for number in range(1, 11):
+    attachment = f"smoke-{number}-log.txt"
+    (results_dir / attachment).write_text(f"Mock smoke check #{number} passed.\n", encoding="utf-8")
+    result = {
+        "uuid": str(uuid.uuid4()),
+        "historyId": f"mock-smoke-{number}",
+        "testCaseId": f"mock-smoke-{number}",
+        "fullName": f"smoke.MockSmokeTest.test_check_{number}",
+        "name": f"Mock smoke test #{number}",
+        "status": "passed",
+        "stage": "finished",
+        "start": started + number,
+        "stop": started + number + 1,
+        "attachments": [{"name": "mock log", "source": attachment, "type": "text/plain"}],
+    }
+    (results_dir / f"smoke-{number}-result.json").write_text(json.dumps(result), encoding="utf-8")
 
-result = {
-    "uuid": test_uuid,
-    "historyId": "mock-smoke-login",
-    "testCaseId": "mock-smoke-login",
-    "fullName": "smoke.MockLoginTest.test_login",
-    "name": "Mock login smoke test",
-    "status": "passed",
-    "stage": "finished",
-    "start": started,
-    "stop": started + 1,
-    "attachments": [{"name": "mock log", "source": attachment, "type": "text/plain"}],
-}
-(results_dir / "smoke-login-result.json").write_text(json.dumps(result), encoding="utf-8")
-print("Created smoke Allure result")
+print("Created 10 smoke Allure results")
