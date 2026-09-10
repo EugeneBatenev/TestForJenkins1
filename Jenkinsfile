@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh '''#!/bin/sh
                     export PATH="$HOME/.local/bin:$PATH"
-                    allurectl watch -- env MOCK_TEST_SUITE="$MOCK_TEST_SUITE" ALLURE_RESULTS_DIR="$ALLURE_RESULTS" python3 run_mock_tests.py
+                    allurectl watch -- python3 -m pytest "tests/$MOCK_TEST_SUITE" --alluredir="$ALLURE_RESULTS" --clean-alluredir
                 '''
             }
         }
