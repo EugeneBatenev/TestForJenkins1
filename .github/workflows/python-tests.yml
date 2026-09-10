@@ -1,0 +1,57 @@
+name: Run tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      MOCK_TEST_SUITE:
+        description: Test suite to run
+        required: true
+        default: smoke
+        type: choice
+        options:
+          - smoke
+          - regression
+      ALLURE_JOB_RUN_ID:
+        description: ALLURE_JOB_RUN_ID service parameter. Leave blank.
+        required: false
+
+env:
+  ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+  ALLURE_JOB_RUN_ID: ${{ inputs.ALLURE_JOB_RUN_ID }}
+  ALLURE_ENDPOINT: https://nimaruichi.qameta.in
+  ALLURE_PROJECT_ID: 1
+  ALLURE_RESULTS: allure-results
+  ALLURE_LAUNCH_NAME: TestForJenkins1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install framework dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Install and configure allurectl
+        uses: allure-framework/setup-allurectl@v1
+        with:
+          allure-endpoint: ${{ env.ALLURE_ENDPOINT }}
+          allure-token: ${{ secrets.ALLURE_TOKEN }}
+          allure-project-id: ${{ env.ALLURE_PROJECT_ID }}
+
+      - name: Run tests with Allure
+        run: allurectl watch -- env MOCK_TEST_SUITE=${{ inputs.MOCK_TEST_SUITE }} ALLURE_RESULTS_DIR=${{ env.ALLURE_RESULTS }} python3 run_mock_tests.py
+
+      - name: Save test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ github.run_id }}
+          path: ${{ env.ALLURE_RESULTS }}
+          retention-days: 1
