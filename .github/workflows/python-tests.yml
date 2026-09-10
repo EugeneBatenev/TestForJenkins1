@@ -6,9 +6,10 @@ on:
       MOCK_TEST_SUITE:
         description: Test suite to run
         required: true
-        default: smoke
+        default: tests
         type: choice
         options:
+          - tests
           - smoke
           - regression
       ALLURE_JOB_RUN_ID:
